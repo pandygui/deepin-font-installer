@@ -11,11 +11,7 @@ CONFIG += c++11 link_pkgconfig
 PKGCONFIG += dtkwidget freetype2 glib-2.0
 
 # Input
-HEADERS += mainwindow.h homepage.h singlefilepage.h multifilepage.h listview.h \
-    utils.h \
-    listitem.h
-SOURCES += main.cpp mainwindow.cpp homepage.cpp singlefilepage.cpp multifilepage.cpp listview.cpp \
-    utils.cpp \
-    listitem.cpp
+HEADERS += mainwindow.h homepage.h singlefilepage.h multifilepage.h listview.h utils.h listitem.h
+SOURCES += main.cpp mainwindow.cpp homepage.cpp singlefilepage.cpp multifilepage.cpp listview.cpp utils.cpp listitem.cpp
 
 RESOURCES += deepin-font-installer.qrc
