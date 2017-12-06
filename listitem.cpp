@@ -10,13 +10,13 @@ ListItem::ListItem(QWidget *parent)
     m_infoLayout = new QVBoxLayout;
     m_nameLabel = new QLabel;
     m_styleLabel = new QLabel;
-    m_infoLabel = new QLabel {"xxxxxxx xxxx"};
+    m_infoLabel = new QLabel;
     m_statusLabel = new QLabel;
-    m_closeBtn = new DImageButton {":/images/close_normal.svg",
-                                   ":/images/close_hover.svg",
-                                   ":/images/close_press.svg"};
+    m_closeBtn = new DImageButton(":/images/close_normal.svg",
+                                  ":/images/close_hover.svg",
+                                  ":/images/close_press.svg");
 
-    QHBoxLayout *nameLayout { new QHBoxLayout };
+    QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->addWidget(m_nameLabel);
     nameLayout->addWidget(m_styleLabel);
 
@@ -45,7 +45,7 @@ QListWidgetItem *ListItem::getItem()
 
 void ListItem::setFilePath(const QString &filePath)
 {
-    const QStringList list { Utils::getFontName(filePath) };
+    const QStringList list = Utils::getFontName(filePath);
 
     m_nameLabel->setText(list.first());
     m_styleLabel->setText(list.last());
@@ -64,7 +64,7 @@ QString ListItem::getFilePath() const
 
 void ListItem::paintEvent(QPaintEvent *e)
 {
-    QPainter painter { this };
+    QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     painter.setPen(Qt::NoPen);

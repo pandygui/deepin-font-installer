@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     : DMainWindow(parent)
 {
     m_mainWidget = new QWidget;
-    m_mainLayout = new QStackedLayout { m_mainWidget };
+    m_mainLayout = new QStackedLayout(m_mainWidget);
     m_homePage = new HomePage;
     m_singleFilePage = new SingleFilePage;
     m_multiFilePage = new MultiFilePage;
@@ -33,16 +33,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
-    auto *const mime { e->mimeData() };
+    auto *const mime = e->mimeData();
 
     if (!mime->hasUrls())
         return e->ignore();
 
     for (const auto &item : mime->urls()) {
-        const QFileInfo info { item.path() };
+        const QFileInfo info = item.path();
         if (info.isDir())
             return e->accept();
-        if (info.isFile() && info.suffix() == "ttf" || info.suffix() == "ttc" || info.suffix() == "otf")
+        if (info.isFile() && Utils::suffixIsFont(info.suffix()))
             return e->accept();
     }
 
@@ -51,7 +51,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 
 void MainWindow::dropEvent(QDropEvent *e)
 {
-    auto *const mime { e->mimeData() };
+    auto *const mime = e->mimeData();
 
     if (!mime->hasUrls())
         return e->ignore();
@@ -64,14 +64,16 @@ void MainWindow::dropEvent(QDropEvent *e)
         if (!url.isLocalFile())
             continue;
 
-        const QString localPath { url.toLocalFile() };
-        const QFileInfo info { localPath };
-
-        if (info.isFile() && info.suffix() == "ttf" || info.suffix() == "ttc" || info.suffix() == "otf")
-            fileList << localPath;
-        else if (info.isDir()) {
-            for (auto font : QDir(localPath).entryInfoList(QStringList() << "*.ttf")) {
-                fileList << font.absoluteFilePath();
+        const QString localPath = url.toLocalFile();
+        const QFileInfo info = localPath;
+        
+        if (info.isFile()) {
+            if (Utils::suffixIsFont(info.suffix())) {
+                fileList << localPath;
+            } else if (info.isDir()) {
+                for (auto font : QDir(localPath).entryInfoList(QStringList() << "*.ttf")) {
+                    fileList << font.absoluteFilePath();
+                }
             }
         }
     }
@@ -81,7 +83,7 @@ void MainWindow::dropEvent(QDropEvent *e)
 
 void MainWindow::refreshPage()
 {
-    const int count { listItems.count() };
+    const int count = listItems.count();
 
     if (count == 0)
         return;

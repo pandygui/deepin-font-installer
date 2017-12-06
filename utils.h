@@ -12,6 +12,8 @@ namespace Utils
     QString getFontType(const QString &suffix);
     QStringList getFontName(const QString &filePath);
     void getFontInfo(const QString &filePath, QString &familyName, QString &styleName, QString &type, QString &version, QString &copyright, QString &description);
+    void exec(const QString &cmd, QStringList args);
+    void sudoExec(const QString &cmd, QStringList args);
 }
 
 #endif // UTILS_H

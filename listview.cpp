@@ -15,7 +15,7 @@ ListView::~ListView()
 void ListView::addItems(const QStringList &list)
 {
     for (const auto &path : list) {
-        ListItem *fileItem { new ListItem };
+        ListItem *fileItem = new ListItem;
         fileItem->setFilePath(path);
         addItem(fileItem->getItem());
         fileItem->getItem()->setSizeHint(QSize(100, 60));
@@ -26,7 +26,7 @@ void ListView::addItems(const QStringList &list)
 
 void ListView::handleClose(QListWidgetItem *item)
 {
-    ListItem *fileItem { static_cast<ListItem *>(itemWidget(item)) };
+    ListItem *fileItem = static_cast<ListItem *>(itemWidget(item));
     delete takeItem(row(fileItem->getItem()));
 
     emit countChanged(count(), fileItem->getFilePath());

@@ -4,9 +4,9 @@
 MultiFilePage::MultiFilePage(QWidget *parent)
     : QWidget(parent)
 {
-    m_layout = new QVBoxLayout {this};
+    m_layout = new QVBoxLayout(this);
     m_listView = new ListView;
-    m_installBtn = new QPushButton { tr("Install") };
+    m_installBtn = new QPushButton(tr("Install"));
 
     m_installBtn->setObjectName("BlueButton");
 

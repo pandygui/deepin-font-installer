@@ -7,6 +7,7 @@
 #include FT_TRUETYPE_IDS_H
 
 #include <QDebug>
+#include <QProcess>
 #include <QFile>
 #include <QFontDatabase>
 #include <glib.h>
@@ -46,8 +47,8 @@ QString Utils::convertUtf16ToUtf8(QByteArray content)
 
 bool Utils::fontIsExists(const QString &fontName)
 {
-    QFontDatabase dataBase;
-    for (const auto &name : dataBase.families()) {
+    const QFontDatabase dataBase;
+    for (const QString &name : dataBase.families()) {
         if (name == fontName)
             return true;
     }
@@ -57,7 +58,11 @@ bool Utils::fontIsExists(const QString &fontName)
 
 bool Utils::suffixIsFont(const QString &suffix)
 {
-    return false;
+    if (suffix == "ttf" || suffix == "ttc" || suffix == "otf") {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 QString Utils::getFontType(const QString &suffix)
@@ -137,4 +142,25 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
 
     free(m_library);
     free(face);
+}
+
+void Utils::exec(const QString &cmd, QStringList args)
+{
+     QProcess *process = new QProcess;
+
+     if (args.isEmpty()) {
+         process->start(cmd);
+     } else {
+         process->start(cmd, args);
+     }
+
+     process->waitForFinished();
+     process->kill();
+     process->close();
+ }
+
+void Utils::sudoExec(const QString &cmd, QStringList args)
+{
+    args.push_front(cmd);
+    exec("pkexec", args);
 }

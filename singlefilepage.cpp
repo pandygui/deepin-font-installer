@@ -8,7 +8,7 @@ DWIDGET_USE_NAMESPACE
 SingleFilePage::SingleFilePage(QWidget *parent)
     : QWidget(parent)
 {
-    m_layout = new QVBoxLayout { this };
+    m_layout = new QVBoxLayout(this);
     m_iconLabel = new QLabel;
     m_nameLabel = new QLabel;
     m_styleLabel = new QLabel;
@@ -16,7 +16,7 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     m_versionLabel = new QLabel;
     m_copyrightLabel = new QLabel;
     m_descLabel = new QLabel;
-    m_installBtn = new QPushButton { tr("Install") };
+    m_installBtn = new QPushButton(tr("Install"));
 
     m_nameLabel->setWordWrap(true);
     m_styleLabel->setWordWrap(true);
@@ -26,7 +26,7 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     m_descLabel->setWordWrap(true);
 
     // set pixmap to icon label.
-    QPixmap iconPixmap { DSvgRenderer::render(":/images/icon.svg", QSize(65, 65) * devicePixelRatioF()) };
+    QPixmap iconPixmap = DSvgRenderer::render(":/images/icon.svg", QSize(65, 65) * devicePixelRatioF());
     m_iconLabel->setFixedSize(65, 65);
     m_iconLabel->setPixmap(iconPixmap);
 
@@ -55,7 +55,7 @@ SingleFilePage::~SingleFilePage()
 
 void SingleFilePage::updateInfo(const QString &filePath)
 {
-    QFileInfo info { filePath };
+    const QFileInfo info = filePath;
     QString name;
     QString style;
     QString type;
