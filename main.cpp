@@ -1,5 +1,6 @@
 #include <DApplication>
 #include <DWidgetUtil>
+#include <QCommandLineParser>
 #include "mainwindow.h"
 #include "utils.h"
 
@@ -19,12 +20,25 @@ int main(int argc, char *argv[])
     app.setProductName(DApplication::translate("Main", "Deepin Font Installer"));
     app.setStyleSheet(Utils::getQssContent(":/qss/style.qss"));
 
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Deepin Font Installer.");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("filename", "Font file path.", "file [file..]");
+    parser.process(app);
+
     MainWindow w;
     w.setFixedSize(500, 400);
     w.setWindowIcon(QIcon(":/images/deepin-font-installer.svg"));
     w.show();
 
     Dtk::Widget::moveToCenter(&w);
+    
+    const QStringList fileList { parser.positionalArguments() };
+
+    if (!fileList.isEmpty()) {
+        QMetaObject::invokeMethod(&w, "onSelected", Qt::QueuedConnection, Q_ARG(QStringList, fileList));
+    }
 
     return app.exec();
 }

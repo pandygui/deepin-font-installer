@@ -21,7 +21,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *);
     void dropEvent(QDropEvent *);
 
-private:
+private slots:
     void refreshPage();
     void onSelected(const QStringList &);
     void handleDelete(const int &, const QString &);

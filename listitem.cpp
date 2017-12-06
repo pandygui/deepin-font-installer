@@ -11,7 +11,7 @@ ListItem::ListItem(QWidget *parent)
     m_nameLabel = new QLabel;
     m_styleLabel = new QLabel;
     m_infoLabel = new QLabel {"xxxxxxx xxxx"};
-    m_statusLabel = new QLabel { "hello" };
+    m_statusLabel = new QLabel;
     m_closeBtn = new DImageButton {":/images/close_normal.svg",
                                    ":/images/close_hover.svg",
                                    ":/images/close_press.svg"};
@@ -45,10 +45,14 @@ QListWidgetItem *ListItem::getItem()
 
 void ListItem::setFilePath(const QString &filePath)
 {
-    const QStringList list = Utils::getFontName(filePath);
+    const QStringList list { Utils::getFontName(filePath) };
 
     m_nameLabel->setText(list.first());
     m_styleLabel->setText(list.last());
+
+    if (Utils::fontIsExists(list.first())) {
+        m_statusLabel->setText(tr("已安装"));
+    }
 
     m_filePath = filePath;
 }
@@ -60,7 +64,7 @@ QString ListItem::getFilePath() const
 
 void ListItem::paintEvent(QPaintEvent *e)
 {
-    QPainter painter(this);
+    QPainter painter { this };
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     painter.setPen(Qt::NoPen);

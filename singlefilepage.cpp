@@ -7,7 +7,7 @@ DWIDGET_USE_NAMESPACE
 SingleFilePage::SingleFilePage(QWidget *parent)
     : QWidget(parent)
 {
-    m_layout = new QVBoxLayout(this);
+    m_layout = new QVBoxLayout { this };
     m_iconLabel = new QLabel;
     m_nameLabel = new QLabel;
     m_styleLabel = new QLabel;
@@ -25,7 +25,7 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     m_descLabel->setWordWrap(true);
 
     // set pixmap to icon label.
-    QPixmap iconPixmap = DSvgRenderer::render(":/images/icon.svg", QSize(65, 65) * devicePixelRatioF());
+    QPixmap iconPixmap { DSvgRenderer::render(":/images/icon.svg", QSize(65, 65) * devicePixelRatioF()) };
     m_iconLabel->setFixedSize(65, 65);
     m_iconLabel->setPixmap(iconPixmap);
 

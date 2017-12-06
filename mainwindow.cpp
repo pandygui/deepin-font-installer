@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
-    auto *const mime = e->mimeData();
+    auto *const mime { e->mimeData() };
 
     if (!mime->hasUrls())
         return e->ignore();
@@ -51,7 +51,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 
 void MainWindow::dropEvent(QDropEvent *e)
 {
-    auto *const mime = e->mimeData();
+    auto *const mime { e->mimeData() };
 
     if (!mime->hasUrls())
         return e->ignore();
@@ -64,8 +64,8 @@ void MainWindow::dropEvent(QDropEvent *e)
         if (!url.isLocalFile())
             continue;
 
-        const QString localPath = url.toLocalFile();
-        const QFileInfo info(localPath);
+        const QString localPath { url.toLocalFile() };
+        const QFileInfo info { localPath };
 
         if (info.isFile() && info.suffix() == "ttf" || info.suffix() == "ttc" || info.suffix() == "otf")
             fileList << localPath;

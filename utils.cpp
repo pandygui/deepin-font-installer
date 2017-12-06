@@ -8,6 +8,7 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QFontDatabase>
 #include <glib.h>
 
 QString Utils::getQssContent(const QString &filePath)
@@ -43,6 +44,17 @@ QString Utils::convertUtf16ToUtf8(QByteArray content)
     return convertedStr;
 }
 
+bool Utils::fontIsExists(const QString &fontName)
+{
+    QFontDatabase dataBase;
+    for (const auto &name : dataBase.families()) {
+        if (name == fontName)
+            return true;
+    }
+
+    return false;
+}
+
 QStringList Utils::getFontName(const QString &filePath)
 {
     QStringList data;
@@ -75,7 +87,7 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
     familyName = QString::fromLatin1(face->family_name);
     styleName = QString::fromLatin1(face->style_name);
 
-    const int length = FT_Get_Sfnt_Name_Count(face);
+    const int length { FT_Get_Sfnt_Name_Count(face) };
     for (int i = 0; i < length; ++i) {
         FT_SfntName sname;
         if (FT_Get_Sfnt_Name(face, i, &sname) != 0)
@@ -95,8 +107,7 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
 
         switch (sname.name_id) {
         case TT_NAME_ID_COPYRIGHT:
-            //copyright = g_convert((char *)sname.string, sname.string_len, "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-            copyright = convertUtf16ToUtf8(str.toLatin1());
+            copyright = g_convert((char *)sname.string, sname.string_len, "UTF-8", "UTF-16BE", NULL, NULL, NULL);
             break;
         case TT_NAME_ID_VERSION_STRING:
             version = g_convert((char *)sname.string, sname.string_len, "UTF-8", "UTF-16BE", NULL, NULL, NULL);

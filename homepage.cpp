@@ -11,7 +11,7 @@ HomePage::HomePage(QWidget *parent)
     m_splitLine = new QLabel;
     m_chooseBtn = new DLinkButton { tr("Select File") };
 
-    QPixmap iconPixmap = DSvgRenderer::render(":/images/icon.svg", QSize(140, 140) * devicePixelRatioF());
+    QPixmap iconPixmap { DSvgRenderer::render(":/images/icon.svg", QSize(140, 140) * devicePixelRatioF()) };
     m_iconLabel->setFixedSize(140, 140);
     m_iconLabel->setPixmap(iconPixmap);
 
