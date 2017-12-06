@@ -1,5 +1,4 @@
 #include "utils.h"
-#include <iconv.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
@@ -24,27 +23,6 @@ QString Utils::getQssContent(const QString &filePath)
     return qss;
 }
 
-QString Utils::convertUtf16ToUtf8(QByteArray content)
-{
-    QString convertedStr {""};
-
-    std::size_t inputBufSize { content.size() };
-    std::size_t outputBufSize {inputBufSize * 4};
-    char *inputBuff { content.data() };
-    char *outputBuff { new char[outputBufSize] };
-    char *backupPtr { outputBuff };
-
-    iconv_t code { iconv_open("UTF-8", "UTF-16BE") }; // UTF16BE to UTF8.
-    std::size_t retVal { iconv(code, &inputBuff, &inputBufSize, &outputBuff, &outputBufSize) };
-    std::size_t actuallyUsed { outputBuff - backupPtr };
-
-    convertedStr = QString::fromUtf8(QByteArray(backupPtr, actuallyUsed));
-    iconv_close(code);
-
-    delete []backupPtr;
-    return convertedStr;
-}
-
 bool Utils::fontIsExists(const QString &fontName)
 {
     const QFontDatabase dataBase;
@@ -63,6 +41,14 @@ bool Utils::suffixIsFont(const QString &suffix)
     } else {
         return false;
     }
+}
+
+QStringList Utils::suffixList()
+{
+    QStringList list;
+    list << "*.ttf" << "*.ttc" << "*.otf";
+
+    return list;
 }
 
 QString Utils::getFontType(const QString &suffix)
@@ -125,7 +111,6 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
             char c { static_cast<char>(sname.string[i]) };
             str.push_back(c);
         }
-        qDebug() << convertUtf16ToUtf8(str.toLatin1());
 
         switch (sname.name_id) {
         case TT_NAME_ID_COPYRIGHT:

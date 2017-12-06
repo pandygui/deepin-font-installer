@@ -65,8 +65,8 @@ void MainWindow::dropEvent(QDropEvent *e)
             continue;
 
         const QString localPath = url.toLocalFile();
-        const QFileInfo info = localPath;
-        
+        const QFileInfo info(localPath);
+
         if (info.isFile()) {
             if (Utils::suffixIsFont(info.suffix())) {
                 fileList << localPath;
