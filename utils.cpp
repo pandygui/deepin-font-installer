@@ -25,7 +25,7 @@ QString Utils::getQssContent(const QString &filePath)
 
 QString Utils::convertUtf16ToUtf8(QByteArray content)
 {
-    QString convertedStr = nullptr;
+    QString convertedStr {""};
 
     std::size_t inputBufSize { content.size() };
     std::size_t outputBufSize {inputBufSize * 4};
@@ -33,7 +33,7 @@ QString Utils::convertUtf16ToUtf8(QByteArray content)
     char *outputBuff { new char[outputBufSize] };
     char *backupPtr { outputBuff };
 
-    iconv_t code { iconv_open("UTF-8", "UTF16BE") }; // UTF16BE to UTF8.
+    iconv_t code { iconv_open("UTF-8", "UTF-16BE") }; // UTF16BE to UTF8.
     std::size_t retVal { iconv(code, &inputBuff, &inputBufSize, &outputBuff, &outputBufSize) };
     std::size_t actuallyUsed { outputBuff - backupPtr };
 
@@ -53,6 +53,22 @@ bool Utils::fontIsExists(const QString &fontName)
     }
 
     return false;
+}
+
+bool Utils::suffixIsFont(const QString &suffix)
+{
+    return false;
+}
+
+QString Utils::getFontType(const QString &suffix)
+{
+    if (suffix == "ttf" || suffix == "ttc") {
+        return "TrueType";
+    } else if (suffix == "otf") {
+        return "OpenType";
+    } else {
+        return "Unknow";
+    }
 }
 
 QStringList Utils::getFontName(const QString &filePath)
@@ -101,9 +117,10 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
 
         QString str;
         for(int i  = 0; i != sname.string_len; ++i){
-            char c{ static_cast<char>(sname.string[i]) };
+            char c { static_cast<char>(sname.string[i]) };
             str.push_back(c);
         }
+        qDebug() << convertUtf16ToUtf8(str.toLatin1());
 
         switch (sname.name_id) {
         case TT_NAME_ID_COPYRIGHT:

@@ -16,7 +16,7 @@ ListItem::ListItem(QWidget *parent)
                                    ":/images/close_hover.svg",
                                    ":/images/close_press.svg"};
 
-    QHBoxLayout *nameLayout = new QHBoxLayout;
+    QHBoxLayout *nameLayout { new QHBoxLayout };
     nameLayout->addWidget(m_nameLabel);
     nameLayout->addWidget(m_styleLabel);
 

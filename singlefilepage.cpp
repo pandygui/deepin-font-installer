@@ -1,6 +1,7 @@
 #include "singlefilepage.h"
 #include "dsvgrenderer.h"
 #include "utils.h"
+#include <QFileInfo>
 
 DWIDGET_USE_NAMESPACE
 
@@ -54,6 +55,7 @@ SingleFilePage::~SingleFilePage()
 
 void SingleFilePage::updateInfo(const QString &filePath)
 {
+    QFileInfo info { filePath };
     QString name;
     QString style;
     QString type;
@@ -64,7 +66,7 @@ void SingleFilePage::updateInfo(const QString &filePath)
 
     m_nameLabel->setText(name);
     m_styleLabel->setText("Style: " + style);
-    m_typeLabel->setText("Type: OpenType");
+    m_typeLabel->setText("Type: " + Utils::getFontType(info.suffix()));
     m_versionLabel->setText("Version: " + version);
     m_copyrightLabel->setText("Copyright: " + m_copyrightLabel->fontMetrics().elidedText(copyright, Qt::ElideRight, this->width() * 2));
     m_descLabel->setText("Description: " + m_descLabel->fontMetrics().elidedText(description, Qt::ElideRight, this->width() * 2));

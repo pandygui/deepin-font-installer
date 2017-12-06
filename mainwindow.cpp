@@ -39,7 +39,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
         return e->ignore();
 
     for (const auto &item : mime->urls()) {
-        const QFileInfo info(item.path());
+        const QFileInfo info { item.path() };
         if (info.isDir())
             return e->accept();
         if (info.isFile() && info.suffix() == "ttf" || info.suffix() == "ttc" || info.suffix() == "otf")
