@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     MainWindow w;
-    w.setFixedSize(500, 400);
+    w.setFixedSize(520, 400);
     w.setWindowIcon(QIcon(":/images/deepin-font-installer.svg"));
     w.show();
 

@@ -26,6 +26,7 @@ QString Utils::getQssContent(const QString &filePath)
 bool Utils::fontIsExists(const QString &fontName)
 {
     const QFontDatabase dataBase;
+
     for (const QString &name : dataBase.families()) {
         if (name == fontName)
             return true;
@@ -65,9 +66,9 @@ QString Utils::getFontType(const QString &suffix)
 QStringList Utils::getFontName(const QString &filePath)
 {
     QStringList data;
-    FT_Library library { 0 };
-    FT_Face face { 0 };
-    FT_Error error { FT_Err_Ok };
+    FT_Library library = 0;  // handle to library
+    FT_Face face = 0;        // handle to face object
+    FT_Error error = FT_Err_Ok;
     error = FT_Init_FreeType(&library);
 
     if (!error) {
@@ -82,9 +83,9 @@ QStringList Utils::getFontName(const QString &filePath)
 
 void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &styleName, QString &type, QString &version, QString &copyright, QString &description)
 {
-    FT_Library m_library { 0 };
-    FT_Face face { 0 };
-    FT_Error error { FT_Err_Ok };
+    FT_Library m_library = 0;
+    FT_Face face = 0;
+    FT_Error error = FT_Err_Ok;
     error = FT_Init_FreeType(&m_library);
 
     if (!error) {
@@ -94,8 +95,8 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
     familyName = QString::fromLatin1(face->family_name);
     styleName = QString::fromLatin1(face->style_name);
 
-    const int length { FT_Get_Sfnt_Name_Count(face) };
-    for (int i = 0; i < length; ++i) {
+    const int len = FT_Get_Sfnt_Name_Count(face);
+    for (int i = 0; i < len; ++i) {
         FT_SfntName sname;
         if (FT_Get_Sfnt_Name(face, i, &sname) != 0)
             continue;
@@ -106,10 +107,10 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
               sname.language_id == TT_MS_LANGID_ENGLISH_UNITED_STATES))
             continue;
 
-        QString str;
+        QString str = nullptr;
         for(int i  = 0; i != sname.string_len; ++i){
-            char c { static_cast<char>(sname.string[i]) };
-            str.push_back(c);
+            char ch = static_cast<char>(sname.string[i]);
+            str.push_back(ch);
         }
 
         switch (sname.name_id) {

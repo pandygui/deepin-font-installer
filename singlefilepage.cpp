@@ -69,5 +69,5 @@ void SingleFilePage::updateInfo(const QString &filePath)
     m_typeLabel->setText("Type: " + Utils::getFontType(info.suffix()));
     m_versionLabel->setText("Version: " + version);
     m_copyrightLabel->setText("Copyright: " + m_copyrightLabel->fontMetrics().elidedText(copyright, Qt::ElideRight, this->width() * 2));
-    m_descLabel->setText("Description: " + m_descLabel->fontMetrics().elidedText(description, Qt::ElideRight, this->width() * 2));
+    m_descLabel->setText("Description: "+ m_descLabel->fontMetrics().elidedText(description, Qt::ElideRight, this->width() * 2));
 }
