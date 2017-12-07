@@ -4,7 +4,7 @@
 
 ## Dependencies
 
-* sudo apt install libdtkwidget-dev qttools5-dev-tools libfontconfig1-dev
+* sudo apt install libdtkwidget-dev qttools5-dev-tools libglib2.0-dev
 
 ## Installation
 
