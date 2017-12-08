@@ -1,0 +1,12 @@
+Source: deepin-font-installer
+Section: utils
+Priority: optional
+Maintainer: Rekols <rekols@foxmail.com>
+Build-Depends: debhelper (>= 9),pkg-config, qt5-qmake, qt5-default, libdtkwidget-dev
+Standards-Version: 3.9.8
+Homepage: http://www.deepin.org
+
+Package: deepin-font-installer
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Deepin Font Installer

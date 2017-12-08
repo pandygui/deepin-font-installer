@@ -8,7 +8,7 @@ TEMPLATE = app
 TARGET = deepin-font-installer
 INCLUDEPATH += .
 CONFIG += c++11 link_pkgconfig
-PKGCONFIG += dtkwidget freetype2 glib-2.0
+PKGCONFIG += dtkwidget freetype2 fontconfig glib-2.0
 
 # Input
 HEADERS += mainwindow.h homepage.h singlefilepage.h multifilepage.h listview.h utils.h listitem.h

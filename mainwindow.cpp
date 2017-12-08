@@ -15,14 +15,17 @@ MainWindow::MainWindow(QWidget *parent)
     m_singleFilePage = new SingleFilePage;
     m_multiFilePage = new MultiFilePage;
 
+    // add widget to main layout.
     m_mainLayout->addWidget(m_homePage);
     m_mainLayout->addWidget(m_singleFilePage);
     m_mainLayout->addWidget(m_multiFilePage);
 
+    // init window flags.
     setWindowTitle(tr("Deepin Font Installer"));
     setCentralWidget(m_mainWidget);
     setAcceptDrops(true);
 
+    // connect the signals to the slot function.
     connect(m_homePage, &HomePage::fileSelected, this, &MainWindow::onSelected);
     connect(m_multiFilePage, &MultiFilePage::countChanged, this, &MainWindow::handleDelete);
 }
@@ -35,6 +38,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
     auto *const mime = e->mimeData();
 
+    // not has urls.
     if (!mime->hasUrls())
         return e->ignore();
 
@@ -67,14 +71,8 @@ void MainWindow::dropEvent(QDropEvent *e)
         const QString localPath = url.toLocalFile();
         const QFileInfo info(localPath);
 
-        if (info.isFile()) {
-            if (Utils::suffixIsFont(info.suffix())) {
-                fileList << localPath;
-            } else if (info.isDir()) {
-                for (auto font : QDir(localPath).entryInfoList(QStringList() << "*.ttf")) {
-                    fileList << font.absoluteFilePath();
-                }
-            }
+        if (info.isFile() && Utils::suffixIsFont(info.suffix())) {
+            fileList << localPath;
         }
     }
 
@@ -89,9 +87,11 @@ void MainWindow::refreshPage()
         return;
 
     if (count == 1) {
+        // switch to single file page.
         m_mainLayout->setCurrentIndex(1);
         m_singleFilePage->updateInfo(listItems.first());
     } else {
+        // switch to multi file page.
         m_mainLayout->setCurrentIndex(2);
         m_multiFilePage->loadItems(listItems);
     }

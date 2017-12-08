@@ -1,5 +1,6 @@
 #include "homepage.h"
 #include "dsvgrenderer.h"
+#include "utils.h"
 #include <QFileDialog>
 
 HomePage::HomePage(QWidget *parent)
@@ -7,9 +8,9 @@ HomePage::HomePage(QWidget *parent)
 {
     m_layout = new QVBoxLayout(this);
     m_iconLabel = new QLabel;
-    m_tipsLabel = new QLabel(tr("Drag and drop file here"));
+    m_tipsLabel = new QLabel(tr("Drag font file here"));
     m_splitLine = new QLabel;
-    m_chooseBtn = new DLinkButton(tr("Select File"));
+    m_chooseBtn = new DLinkButton(tr("Select file"));
 
     QPixmap iconPixmap = DSvgRenderer::render(":/images/icon.svg", QSize(140, 140) * devicePixelRatioF());
     m_iconLabel->setFixedSize(140, 140);
@@ -38,7 +39,7 @@ void HomePage::onChooseBtnClicked()
 {
     QFileDialog dialog;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter("Font Files (*.ttf *.otf)");
+    dialog.setNameFilter(Utils::suffixList());
 
     if (dialog.exec() != QDialog::Accepted)
         return;

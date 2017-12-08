@@ -25,7 +25,10 @@ private:
     QLabel *m_versionLabel;
     QLabel *m_copyrightLabel;
     QLabel *m_descLabel;
+    QLabel *m_statusLabel;
     QPushButton *m_installBtn;
+    QPushButton *m_uninstallBtn;
+    QPushButton *m_reinstallBtn;
 };
 
 #endif

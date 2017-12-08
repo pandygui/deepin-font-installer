@@ -1,6 +1,6 @@
 # Deepin Font Installer
 
-...
+Deepin Font Installer is used to install and uninstall font file for users with bulk install function.
 
 ## Dependencies
 

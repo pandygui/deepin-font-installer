@@ -8,7 +8,10 @@ DWIDGET_USE_NAMESPACE
 
 int main(int argc, char *argv[])
 {
+    // load dtk xcb plugin.
     DApplication::loadDXcbPlugin();
+
+    // init Dtk application's attrubites.
     DApplication app(argc, argv);
     app.setTheme("light");
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -19,7 +22,9 @@ int main(int argc, char *argv[])
     app.setProductIcon(QIcon(":/images/deepin-font-installer.svg"));
     app.setProductName(DApplication::translate("Main", "Deepin Font Installer"));
     app.setStyleSheet(Utils::getQssContent(":/qss/style.qss"));
+    app.setApplicationDescription(DApplication::translate("Main", "Deepin Font Installer is used to install and uninstall font file for users with bulk install function."));
 
+    // add command line parser to app.
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin Font Installer.");
     parser.addHelpOption();
@@ -27,6 +32,7 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("filename", "Font file path.", "file [file..]");
     parser.process(app);
 
+    // init modules.
     MainWindow w;
     w.setFixedSize(520, 400);
     w.setWindowIcon(QIcon(":/images/deepin-font-installer.svg"));
@@ -34,6 +40,7 @@ int main(int argc, char *argv[])
 
     Dtk::Widget::moveToCenter(&w);
 
+    // handle command line parser.
     const QStringList fileList = parser.positionalArguments();
 
     if (!fileList.isEmpty()) {

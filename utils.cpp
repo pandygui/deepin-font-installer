@@ -13,7 +13,7 @@
 
 QString Utils::getQssContent(const QString &filePath)
 {
-    QFile file { filePath };
+    QFile file(filePath);
     QString qss;
 
     if (file.open(QIODevice::ReadOnly)) {
@@ -44,12 +44,9 @@ bool Utils::suffixIsFont(const QString &suffix)
     }
 }
 
-QStringList Utils::suffixList()
+QString Utils::suffixList()
 {
-    QStringList list;
-    list << "*.ttf" << "*.ttc" << "*.otf";
-
-    return list;
+    return QString("Font Files (*.ttf *.ttc *.otf)");
 }
 
 QString Utils::getFontType(const QString &suffix)
@@ -65,14 +62,14 @@ QString Utils::getFontType(const QString &suffix)
 
 QStringList Utils::getFontName(const QString &filePath)
 {
-    QStringList data;
+    QStringList data;        // save font name and style name.
     FT_Library library = 0;  // handle to library
     FT_Face face = 0;        // handle to face object
     FT_Error error = FT_Err_Ok;
     error = FT_Init_FreeType(&library);
 
     if (!error) {
-        FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
+        error = FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
     }
 
     data << QString::fromLatin1(face->family_name);

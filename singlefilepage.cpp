@@ -16,7 +16,10 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     m_versionLabel = new QLabel;
     m_copyrightLabel = new QLabel;
     m_descLabel = new QLabel;
+    m_statusLabel = new QLabel;
     m_installBtn = new QPushButton(tr("Install"));
+    m_uninstallBtn = new QPushButton(tr("Remove"));
+    m_reinstallBtn = new QPushButton(tr("Reinstall"));
 
     m_nameLabel->setWordWrap(true);
     m_styleLabel->setWordWrap(true);
@@ -31,14 +34,26 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     m_iconLabel->setPixmap(iconPixmap);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
-    bottomLayout->addWidget(m_installBtn, 0, Qt::AlignHCenter);
+    bottomLayout->addStretch();
+    bottomLayout->addWidget(m_installBtn);
+    bottomLayout->addWidget(m_uninstallBtn);
+    bottomLayout->addWidget(m_reinstallBtn);
+    bottomLayout->addStretch();
 
     m_installBtn->setFixedSize(120, 36);
     m_installBtn->setObjectName("BlueButton");
+    m_installBtn->hide();
+
+    m_uninstallBtn->setFixedSize(120, 36);
+    m_uninstallBtn->setObjectName("GrayButton");
+    m_uninstallBtn->hide();
+
+    m_reinstallBtn->setFixedSize(120, 36);
+    m_reinstallBtn->setObjectName("GrayButton");
+    m_reinstallBtn->hide();
 
     m_layout->addWidget(m_iconLabel, 0, Qt::AlignTop | Qt::AlignHCenter);
     m_layout->addWidget(m_nameLabel, 0, Qt::AlignHCenter);
-    m_layout->addSpacing(10);
     m_layout->addWidget(m_styleLabel);
     m_layout->addWidget(m_typeLabel);
     m_layout->addWidget(m_versionLabel);
@@ -63,6 +78,16 @@ void SingleFilePage::updateInfo(const QString &filePath)
     QString copyright;
     QString description;
     Utils::getFontInfo(filePath, name, style, type, version, copyright, description);
+
+    if (Utils::fontIsExists(name)) {
+        m_installBtn->hide();
+        m_uninstallBtn->show();
+        m_reinstallBtn->show();
+    } else {
+        m_installBtn->show();
+        m_uninstallBtn->hide();
+        m_reinstallBtn->hide();
+    }
 
     m_nameLabel->setText(name);
     m_styleLabel->setText("Style: " + style);
