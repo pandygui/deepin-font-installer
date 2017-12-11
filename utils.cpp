@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2011 ~ 2017 Deepin Technology Co., Ltd.
+ *
+ * Author:     rekols <rekols@foxmail.com>
+ * Maintainer: rekols <rekols@foxmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "utils.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -11,6 +31,7 @@
 #include <QProcess>
 #include <QFile>
 #include <QDir>
+#include <QFontInfo>
 #include <QFontDatabase>
 #include <glib.h>
 
@@ -63,20 +84,6 @@ QString Utils::getFontType(const QString &suffix)
     }
 }
 
-QString Utils::getSfntName(const QString &filePath)
-{
-    FT_Library library = 0;
-    FT_Face face = 0;
-    FT_Error error = FT_Err_Ok;
-    error = FT_Init_FreeType(&library);
-
-    if (!error) {
-        error = FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
-    }
-
-    return QString::fromLatin1(face->family_name);
-}
-
 QStringList Utils::getFontName(const QString &filePath)
 {
     QStringList data;        // save font name and style name.
@@ -92,21 +99,21 @@ QStringList Utils::getFontName(const QString &filePath)
     data << QString::fromLatin1(face->family_name);
     data << QString::fromLatin1(face->style_name);
 
-    free(library);
-    free(face);
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
 
     return data;
 }
 
 void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &styleName, QString &type, QString &version, QString &copyright, QString &description)
 {
-    FT_Library m_library = 0;
+    FT_Library library = 0;
     FT_Face face = 0;
     FT_Error error = FT_Err_Ok;
-    error = FT_Init_FreeType(&m_library);
+    error = FT_Init_FreeType(&library);
 
     if (!error) {
-        error = FT_New_Face(m_library, filePath.toLatin1().data(), 0, &face);
+        error = FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
     }
 
     familyName = QString::fromLatin1(face->family_name);
@@ -143,8 +150,8 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
         }
     }
 
-    free(m_library);
-    free(face);
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
 }
 
 void Utils::fontInstall(const QStringList &files)
@@ -167,9 +174,13 @@ void Utils::fontInstall(const QStringList &files)
 QStringList Utils::getAllFontName()
 {
     QStringList families;
+    FT_Library library = 0;
+    FT_Face face = 0;
     FcConfig *config = FcConfigGetCurrent();
     FcStrList *strList = FcConfigGetFontDirs(config);
     FcChar8 *path;
+
+    FT_Init_FreeType(&library);
 
     while ((path = FcStrListNext(strList)) != NULL) {
         const QString pathStr = QString::fromLatin1((char *)path);
@@ -181,11 +192,16 @@ QStringList Utils::getAllFontName()
 
             // filter other font files.
             if (suffixIsFont(info.suffix())) {
-                families << getSfntName(info.absoluteFilePath());
+                FT_New_Face(library, info.absoluteFilePath().toLatin1().data(), 0, &face);
+                families << face->family_name;
             }
         }
     }
 
+    // destroy object.
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
     FcStrListDone(strList);
+
     return families;
 }

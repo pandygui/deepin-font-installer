@@ -31,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_singleFilePage, &SingleFilePage::installBtnClicked, this, [=] {
                                                                             Utils::fontInstall(listItems);
                                                                         });
-
-    Utils::getAllFontName();
 }
 
 MainWindow::~MainWindow()
