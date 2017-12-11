@@ -47,7 +47,7 @@ QString Utils::getQssContent(const QString &filePath)
     return qss;
 }
 
-bool Utils::fontIsExists(const QString &fontName)
+bool Utils::isFontInstalled(const QString &fontName)
 {
     const QStringList families = getAllFontName();
 
@@ -59,7 +59,7 @@ bool Utils::fontIsExists(const QString &fontName)
     return false;
 }
 
-bool Utils::suffixIsFont(const QString &suffix)
+bool Utils::isFontSuffix(const QString &suffix)
 {
     if (suffix == "ttf" || suffix == "ttc" || suffix == "otf") {
         return true;
@@ -163,8 +163,6 @@ void Utils::fontInstall(const QStringList &files)
     }
     cmd.append("/usr/share/fonts/");
 
-    qDebug() << cmd;
-
     process->start(cmd);
     process->waitForFinished();
     process->kill();
@@ -191,7 +189,7 @@ QStringList Utils::getAllFontName()
             const QString filePath = info.absoluteFilePath();
 
             // filter other font files.
-            if (suffixIsFont(info.suffix())) {
+            if (isFontSuffix(info.suffix())) {
                 FT_New_Face(library, info.absoluteFilePath().toLatin1().data(), 0, &face);
                 families << face->family_name;
             }

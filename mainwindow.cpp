@@ -49,7 +49,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
         const QFileInfo info = item.path();
         if (info.isDir())
             return e->accept();
-        if (info.isFile() && Utils::suffixIsFont(info.suffix()))
+        if (info.isFile() && Utils::isFontSuffix(info.suffix()))
             return e->accept();
     }
 
@@ -74,7 +74,7 @@ void MainWindow::dropEvent(QDropEvent *e)
         const QString localPath = url.toLocalFile();
         const QFileInfo info(localPath);
 
-        if (info.isFile() && Utils::suffixIsFont(info.suffix())) {
+        if (info.isFile() && Utils::isFontSuffix(info.suffix())) {
             fileList << localPath;
         }
     }

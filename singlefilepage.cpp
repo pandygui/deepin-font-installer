@@ -81,7 +81,7 @@ void SingleFilePage::updateInfo(const QString &filePath)
     QString description;
     Utils::getFontInfo(filePath, name, style, type, version, copyright, description);
 
-    if (Utils::fontIsExists(name)) {
+    if (Utils::isFontInstalled(name)) {
         m_installBtn->hide();
         m_uninstallBtn->show();
         m_reinstallBtn->show();

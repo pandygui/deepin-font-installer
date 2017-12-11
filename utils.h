@@ -26,8 +26,8 @@
 namespace Utils
 {
     QString getQssContent(const QString &filePath);
-    bool fontIsExists(const QString &fontName);
-    bool suffixIsFont(const QString &suffix);
+    bool isFontInstalled(const QString &fontName);
+    bool isFontSuffix(const QString &suffix);
     QString suffixList();
     QString getFontType(const QString &suffix);
     QStringList getFontName(const QString &filePath);

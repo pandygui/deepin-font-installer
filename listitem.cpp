@@ -50,7 +50,7 @@ void ListItem::setFilePath(const QString &filePath)
     m_nameLabel->setText(list.first());
     m_styleLabel->setText(list.last());
 
-    if (Utils::fontIsExists(list.first())) {
+    if (Utils::isFontInstalled(list.first())) {
         m_statusLabel->setText(tr("Installed"));
     }
 
