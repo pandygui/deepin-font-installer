@@ -5,9 +5,12 @@
 #include FT_SFNT_NAMES_H
 #include FT_TRUETYPE_IDS_H
 
+#include <fontconfig/fontconfig.h>
+
 #include <QDebug>
 #include <QProcess>
 #include <QFile>
+#include <QDir>
 #include <QFontDatabase>
 #include <glib.h>
 
@@ -25,9 +28,9 @@ QString Utils::getQssContent(const QString &filePath)
 
 bool Utils::fontIsExists(const QString &fontName)
 {
-    const QFontDatabase dataBase;
+    const QStringList families = getAllFontName();
 
-    for (const QString &name : dataBase.families()) {
+    for (const QString &name : families) {
         if (name == fontName)
             return true;
     }
@@ -60,6 +63,20 @@ QString Utils::getFontType(const QString &suffix)
     }
 }
 
+QString Utils::getSfntName(const QString &filePath)
+{
+    FT_Library library = 0;
+    FT_Face face = 0;
+    FT_Error error = FT_Err_Ok;
+    error = FT_Init_FreeType(&library);
+
+    if (!error) {
+        error = FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
+    }
+
+    return QString::fromLatin1(face->family_name);
+}
+
 QStringList Utils::getFontName(const QString &filePath)
 {
     QStringList data;        // save font name and style name.
@@ -74,6 +91,9 @@ QStringList Utils::getFontName(const QString &filePath)
 
     data << QString::fromLatin1(face->family_name);
     data << QString::fromLatin1(face->style_name);
+
+    free(library);
+    free(face);
 
     return data;
 }
@@ -127,23 +147,45 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
     free(face);
 }
 
-void Utils::exec(const QString &cmd, QStringList args)
+void Utils::fontInstall(const QStringList &files)
 {
-     QProcess *process = new QProcess;
+    QProcess *process = new QProcess;
+    QString cmd = "pkexec cp -r ";
+    for (auto const file : files) {
+        cmd.append(file + " ");
+    }
+    cmd.append("/usr/share/fonts/");
 
-     if (args.isEmpty()) {
-         process->start(cmd);
-     } else {
-         process->start(cmd, args);
-     }
+    qDebug() << cmd;
 
-     process->waitForFinished();
-     process->kill();
-     process->close();
- }
+    process->start(cmd);
+    process->waitForFinished();
+    process->kill();
+    process->close();
+}
 
-void Utils::sudoExec(const QString &cmd, QStringList args)
+QStringList Utils::getAllFontName()
 {
-    args.push_front(cmd);
-    exec("pkexec", args);
+    QStringList families;
+    FcConfig *config = FcConfigGetCurrent();
+    FcStrList *strList = FcConfigGetFontDirs(config);
+    FcChar8 *path;
+
+    while ((path = FcStrListNext(strList)) != NULL) {
+        const QString pathStr = QString::fromLatin1((char *)path);
+        const QDir dir(pathStr);
+        const QFileInfoList infoList = dir.entryInfoList(QDir::Files);
+
+        for (const QFileInfo &info : infoList) {
+            const QString filePath = info.absoluteFilePath();
+
+            // filter other font files.
+            if (suffixIsFont(info.suffix())) {
+                families << getSfntName(info.absoluteFilePath());
+            }
+        }
+    }
+
+    FcStrListDone(strList);
+    return families;
 }

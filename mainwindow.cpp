@@ -28,6 +28,11 @@ MainWindow::MainWindow(QWidget *parent)
     // connect the signals to the slot function.
     connect(m_homePage, &HomePage::fileSelected, this, &MainWindow::onSelected);
     connect(m_multiFilePage, &MultiFilePage::countChanged, this, &MainWindow::handleDelete);
+    connect(m_singleFilePage, &SingleFilePage::installBtnClicked, this, [=] {
+                                                                            Utils::fontInstall(listItems);
+                                                                        });
+
+    Utils::getAllFontName();
 }
 
 MainWindow::~MainWindow()

@@ -16,6 +16,9 @@ public:
 
     void updateInfo(const QString &filePath);
 
+signals:
+    void installBtnClicked();
+
 private:
     QVBoxLayout *m_layout;
     QLabel *m_nameLabel;

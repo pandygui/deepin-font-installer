@@ -62,6 +62,8 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     m_layout->addStretch();
     m_layout->addLayout(bottomLayout);
     m_layout->addStretch();
+
+    connect(m_installBtn, &QPushButton::clicked, this, &SingleFilePage::installBtnClicked);
 }
 
 SingleFilePage::~SingleFilePage()

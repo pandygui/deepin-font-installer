@@ -1,6 +1,7 @@
 #include <DApplication>
 #include <DWidgetUtil>
 #include <QCommandLineParser>
+#include <QDebug>
 #include "mainwindow.h"
 #include "utils.h"
 
@@ -32,6 +33,8 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("filename", "Font file path.", "file [file..]");
     parser.process(app);
 
+    const QStringList fileList = parser.positionalArguments();
+
     // init modules.
     MainWindow w;
     w.setFixedSize(520, 400);
@@ -41,8 +44,6 @@ int main(int argc, char *argv[])
     Dtk::Widget::moveToCenter(&w);
 
     // handle command line parser.
-    const QStringList fileList = parser.positionalArguments();
-
     if (!fileList.isEmpty()) {
         QMetaObject::invokeMethod(&w, "onSelected", Qt::QueuedConnection, Q_ARG(QStringList, fileList));
     }
