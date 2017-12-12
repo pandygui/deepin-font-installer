@@ -19,13 +19,6 @@
  */
 
 #include "utils.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_TYPE1_TABLES_H
-#include FT_SFNT_NAMES_H
-#include FT_TRUETYPE_IDS_H
-
-#include <fontconfig/fontconfig.h>
 
 #include <QDebug>
 #include <QProcess>
@@ -33,7 +26,15 @@
 #include <QDir>
 #include <QFontInfo>
 #include <QFontDatabase>
+
 #include <glib.h>
+#include <fontconfig/fontconfig.h>
+#include <ft2build.h>
+
+#include FT_FREETYPE_H
+#include FT_TYPE1_TABLES_H
+#include FT_SFNT_NAMES_H
+#include FT_TRUETYPE_IDS_H
 
 QString Utils::getQssContent(const QString &filePath)
 {
@@ -89,12 +90,9 @@ QStringList Utils::getFontName(const QString &filePath)
     QStringList data;        // save font name and style name.
     FT_Library library = 0;  // handle to library
     FT_Face face = 0;        // handle to face object
-    FT_Error error = FT_Err_Ok;
-    error = FT_Init_FreeType(&library);
 
-    if (!error) {
-        error = FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
-    }
+    FT_Init_FreeType(&library);
+    FT_New_Face(library, filePath.toLatin1().data(), 0, &face);
 
     data << QString::fromLatin1(face->family_name);
     data << QString::fromLatin1(face->style_name);
@@ -122,6 +120,7 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
     const int len = FT_Get_Sfnt_Name_Count(face);
     for (int i = 0; i < len; ++i) {
         FT_SfntName sname;
+
         if (FT_Get_Sfnt_Name(face, i, &sname) != 0)
             continue;
 
@@ -131,11 +130,11 @@ void Utils::getFontInfo(const QString &filePath, QString &familyName, QString &s
               sname.language_id == TT_MS_LANGID_ENGLISH_UNITED_STATES))
             continue;
 
-        QString str = nullptr;
-        for(int i  = 0; i != sname.string_len; ++i){
-            char ch = static_cast<char>(sname.string[i]);
-            str.push_back(ch);
-        }
+        // QString str = nullptr;
+        // for(int i  = 0; i != sname.string_len; ++i){
+        //     char ch = static_cast<char>(sname.string[i]);
+        //     str.push_back(ch);
+        // }
 
         switch (sname.name_id) {
         case TT_NAME_ID_COPYRIGHT:
@@ -158,6 +157,7 @@ void Utils::fontInstall(const QStringList &files)
 {
     QProcess *process = new QProcess;
     QString cmd = "pkexec cp -r ";
+
     for (auto const file : files) {
         cmd.append(file + " ");
     }
@@ -168,6 +168,43 @@ void Utils::fontInstall(const QStringList &files)
     process->kill();
     process->close();
 }
+
+// QStringList Utils::getAllFontName()
+
+// {
+//     QStringList families;
+
+//     FcPattern *pattern = FcNameParse((FcChar8 *) ":");
+//     FcObjectSet *objectset = FcObjectSetBuild(FC_FILE, NULL);
+//     FcFontSet *fontset = FcFontList(NULL, pattern, objectset);
+//     FcInit();
+
+//     FT_Library library = 0;
+//     FT_Face face = 0;
+//     FT_Init_FreeType(&library);
+
+//     for (int i = 0; i < fontset->nfont; ++i) {
+//         FcChar8 *family;
+//         if (FcPatternGetString(fontset->fonts[i], FC_FILE, 0, &family) == FcResultMatch) {
+//             FT_New_Face(library, (char *)family, 0, &face);
+//             families << face->family_name;
+//         }
+//     }
+
+//     // destroy object.
+//     if (face)
+//         FT_Done_Face(face);
+//     if (library)
+//         FT_Done_FreeType(library);
+//     if (objectset)
+//         FcObjectSetDestroy(objectset);
+//     if (pattern)
+//         FcPatternDestroy(pattern);
+//     if (fontset)
+//         FcFontSetDestroy(fontset);
+
+//     return families;
+// }
 
 QStringList Utils::getAllFontName()
 {

@@ -6,6 +6,8 @@
 #include <QFileInfo>
 #include <QDir>
 
+#include "../lib/dfontinfo.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : DMainWindow(parent)
 {
@@ -113,5 +115,6 @@ void MainWindow::onSelected(const QStringList &files)
 void MainWindow::handleDelete(const int &count, const QString &filePath)
 {
     listItems.removeAt(listItems.indexOf(filePath));
+
     refreshPage();
 }
