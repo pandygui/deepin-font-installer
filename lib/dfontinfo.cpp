@@ -54,7 +54,7 @@ FontNode DFontInfo::getFontInfo(const QString &filePath)
     return node;
 }
 
-QStringList families()
+QStringList DFontInfo::families()
 {
     QStringList list;
 
@@ -90,9 +90,15 @@ QStringList families()
     return list;
 }
 
-bool DFontInfo::refreshFontCache()
+bool DFontInfo::isFontInstalled(const QString &familyName)
 {
-    FcConfigDestroy(FcConfigGetCurrent());
+    const QStringList list = families();
 
-    return !FcConfigUptoDate(NULL) && FcInitReinitialize();
+    for (const QString &name : list) {
+        if (name == familyName) {
+            return true;
+        }
+    }
+
+    return false;
 }

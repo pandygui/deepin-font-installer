@@ -29,7 +29,7 @@ public:
 
     FontNode getFontInfo(const QString &filePath);
     QStringList families();
-    bool refreshFontCache();
+    bool isFontInstalled(const QString &familyName);
 
 private:
     FT_Library m_ftlib;

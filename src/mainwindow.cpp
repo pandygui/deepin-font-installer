@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2017 ~ 2017 Deepin Technology Co., Ltd.
+ *
+ * Author:     rekols <rekols@foxmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "mainwindow.h"
 #include "utils.h"
 #include <QDebug>
@@ -6,17 +25,14 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include "../lib/dfontinfo.h"
-
 MainWindow::MainWindow(QWidget *parent)
-    : DMainWindow(parent)
+    : DMainWindow(parent),
+      m_mainWidget(new QWidget),
+      m_mainLayout(new QStackedLayout(m_mainWidget)),
+      m_homePage(new HomePage),
+      m_singleFilePage(new SingleFilePage),
+      m_multiFilePage(new MultiFilePage)
 {
-    m_mainWidget = new QWidget;
-    m_mainLayout = new QStackedLayout(m_mainWidget);
-    m_homePage = new HomePage;
-    m_singleFilePage = new SingleFilePage;
-    m_multiFilePage = new MultiFilePage;
-
     // add widget to main layout.
     m_mainLayout->addWidget(m_homePage);
     m_mainLayout->addWidget(m_singleFilePage);
@@ -29,10 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // connect the signals to the slot function.
     connect(m_homePage, &HomePage::fileSelected, this, &MainWindow::onSelected);
-    connect(m_multiFilePage, &MultiFilePage::countChanged, this, &MainWindow::handleDelete);
-    connect(m_singleFilePage, &SingleFilePage::installBtnClicked, this, [=] {
-                                                                            Utils::fontInstall(listItems);
-                                                                        });
+    connect(m_multiFilePage, &MultiFilePage::countChanged, this, &MainWindow::refreshPage);
+    connect(m_singleFilePage, &SingleFilePage::installBtnClicked, this, [=] { });
 }
 
 MainWindow::~MainWindow()
@@ -86,7 +100,7 @@ void MainWindow::dropEvent(QDropEvent *e)
 
 void MainWindow::refreshPage()
 {
-    const int count = listItems.count();
+    const int count = m_multiFilePage->dataList.count();
 
     if (count == 0)
         return;
@@ -94,27 +108,18 @@ void MainWindow::refreshPage()
     if (count == 1) {
         // switch to single file page.
         m_mainLayout->setCurrentIndex(1);
-        m_singleFilePage->updateInfo(listItems.first());
+        m_singleFilePage->updateInfo(m_multiFilePage->dataList.first());
     } else {
         // switch to multi file page.
         m_mainLayout->setCurrentIndex(2);
-        m_multiFilePage->loadItems(listItems);
     }
 }
 
 void MainWindow::onSelected(const QStringList &files)
 {
     for (const auto &file : files) {
-        if (!listItems.contains(file))
-            listItems << file;
+        m_multiFilePage->addItem(file);
     }
-
-    refreshPage();
-}
-
-void MainWindow::handleDelete(const int &count, const QString &filePath)
-{
-    listItems.removeAt(listItems.indexOf(filePath));
-
+    
     refreshPage();
 }

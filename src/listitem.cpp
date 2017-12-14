@@ -1,21 +1,40 @@
+/*
+ * Copyright (C) 2017 ~ 2017 Deepin Technology Co., Ltd.
+ *
+ * Author:     rekols <rekols@foxmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "listitem.h"
 #include "utils.h"
 #include <QPainter>
 
 ListItem::ListItem(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      m_item(new QListWidgetItem),
+      m_fontData(nullptr),
+      m_layout(new QHBoxLayout(this)),
+      m_infoLayout(new QVBoxLayout),
+      m_nameLabel(new QLabel),
+      m_styleLabel(new QLabel),
+      m_infoLabel(new QLabel("xxxxxxxxxx")),
+      m_statusLabel(new QLabel),
+      m_closeBtn(new DImageButton (":/images/close_normal.svg",
+                                   ":/images/close_hover.svg",
+                                   ":/images/close_press.svg"))
 {
-    m_item = new QListWidgetItem;
-    m_layout = new QHBoxLayout(this);
-    m_infoLayout = new QVBoxLayout;
-    m_nameLabel = new QLabel;
-    m_styleLabel = new QLabel;
-    m_infoLabel = new QLabel;
-    m_statusLabel = new QLabel;
-    m_closeBtn = new DImageButton(":/images/close_normal.svg",
-                                  ":/images/close_hover.svg",
-                                  ":/images/close_press.svg");
-
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->addWidget(m_nameLabel);
     nameLayout->addWidget(m_styleLabel);
@@ -43,23 +62,27 @@ QListWidgetItem *ListItem::getItem()
     return m_item;
 }
 
-void ListItem::setFilePath(const QString &filePath)
-{
-    const QStringList list = Utils::getFontName(filePath);
-
-    m_nameLabel->setText(list.first());
-    m_styleLabel->setText(list.last());
-
-    if (Utils::isFontInstalled(list.first())) {
-        m_statusLabel->setText(tr("Installed"));
-    }
-
-    m_filePath = filePath;
-}
-
 QString ListItem::getFilePath() const
 {
     return m_filePath;
+}
+
+void ListItem::setFontData(FontData *p)
+{
+    const QStringList list = Utils::getFontName(p->filePath);
+
+    if (Utils::isFontInstalled(p->familyName)) {
+        m_statusLabel->setText(tr("Installed"));
+    }
+
+    m_fontData = p;
+    m_nameLabel->setText(m_fontData->familyName);
+    m_styleLabel->setText(m_fontData->styleName);
+}
+
+FontData *ListItem::getFontData()
+{
+    return m_fontData;
 }
 
 void ListItem::paintEvent(QPaintEvent *e)

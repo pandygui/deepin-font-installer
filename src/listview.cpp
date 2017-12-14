@@ -1,5 +1,25 @@
+/*
+ * Copyright (C) 2017 ~ 2017 Deepin Technology Co., Ltd.
+ *
+ * Author:     rekols <rekols@foxmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "listview.h"
 #include <QListWidgetItem>
+#include <QDebug>
 
 ListView::ListView(QWidget *parent)
     : QListWidget(parent)
@@ -12,16 +32,17 @@ ListView::~ListView()
 {
 }
 
-void ListView::addItems(const QStringList &list)
+void ListView::addListItem(FontData *data)
 {
-    for (const auto &path : list) {
-        ListItem *fileItem = new ListItem;
-        fileItem->setFilePath(path);
-        addItem(fileItem->getItem());
-        fileItem->getItem()->setSizeHint(QSize(100, 60));
-        setItemWidget(fileItem->getItem(), fileItem);
-        connect(fileItem, &ListItem::closeBtnClicked, this, &ListView::handleClose);
-    }
+    ListItem *fileItem = new ListItem;
+    // fileItem->setFilePath(data->filePath);
+
+    addItem(fileItem->getItem());
+    fileItem->setFontData(data);
+    fileItem->getItem()->setSizeHint(QSize(100, 65));
+    setItemWidget(fileItem->getItem(), fileItem);
+
+    connect(fileItem, &ListItem::closeBtnClicked, this, &ListView::handleClose);
 }
 
 void ListView::handleClose(QListWidgetItem *item)
@@ -29,5 +50,6 @@ void ListView::handleClose(QListWidgetItem *item)
     ListItem *fileItem = static_cast<ListItem *>(itemWidget(item));
     delete takeItem(row(fileItem->getItem()));
 
-    emit countChanged(count(), fileItem->getFilePath());
+    // emit countChanged(count(), fileItem->getFontData());
+    emit deleteItem(fileItem->getFontData());
 }

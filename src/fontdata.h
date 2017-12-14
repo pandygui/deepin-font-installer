@@ -17,23 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef FONTDATA_H
+#define FONTDATA_H
 
 #include <QObject>
-#include "fontdata.h"
 
-namespace Utils
+class FontData : public QObject
 {
-    QString getQssContent(const QString &filePath);
-    bool isFontInstalled(const QString &fontName);
-    bool isFontSuffix(const QString &suffix);
-    QString suffixList();
-    QString getFontType(const QString &suffix);
-    QStringList getFontName(const QString &filePath);
-    void getFontInfo(FontData *data);
-    void fontInstall(const QStringList &files);
-    QStringList getAllFontName();
-}
+    Q_OBJECT
 
-#endif // UTILS_H
+public:
+    FontData(QObject *parent = nullptr);
+    ~FontData();
+
+    QString filePath;
+    QString familyName;
+    QString styleName;
+    QString type;
+    QString version;
+    QString copyright;
+    QString description;
+};
+
+#endif
