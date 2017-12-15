@@ -47,7 +47,7 @@ private:
     QLabel *m_typeLabel;
     QLabel *m_versionLabel;
     QLabel *m_copyrightLabel;
-    QLabel *m_descLabel;
+    QLabel *m_descriptionLabel;
     QLabel *m_statusLabel;
     QPushButton *m_installBtn;
     QPushButton *m_removeBtn;

@@ -19,7 +19,6 @@
 
 #include "listview.h"
 #include <QListWidgetItem>
-#include <QDebug>
 
 ListView::ListView(QWidget *parent)
     : QListWidget(parent)
@@ -35,7 +34,6 @@ ListView::~ListView()
 void ListView::addListItem(FontData *data)
 {
     ListItem *fileItem = new ListItem;
-    // fileItem->setFilePath(data->filePath);
 
     addItem(fileItem->getItem());
     fileItem->setFontData(data);
@@ -48,8 +46,6 @@ void ListView::addListItem(FontData *data)
 void ListView::handleClose(QListWidgetItem *item)
 {
     ListItem *fileItem = static_cast<ListItem *>(itemWidget(item));
-    delete takeItem(row(fileItem->getItem()));
-
-    // emit countChanged(count(), fileItem->getFontData());
     emit deleteItem(fileItem->getFontData());
+    delete takeItem(row(fileItem->getItem()));
 }

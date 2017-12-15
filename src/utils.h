@@ -30,7 +30,6 @@ namespace Utils
     bool isFontSuffix(const QString &suffix);
     QString suffixList();
     QString getFontType(const QString &suffix);
-    QStringList getFontName(const QString &filePath);
     void getFontInfo(FontData *data);
     void fontInstall(const QStringList &files);
     QStringList getAllFontName();

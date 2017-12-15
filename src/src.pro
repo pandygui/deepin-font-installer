@@ -8,7 +8,7 @@ TEMPLATE = app
 TARGET = deepin-font-installer
 INCLUDEPATH += .
 CONFIG += c++11 link_pkgconfig
-PKGCONFIG += dtkwidget freetype2 fontconfig glib-2.0
+PKGCONFIG += dtkwidget freetype2 fontconfig glib-2.0 harfbuzz
 
 #SUBDIRS += lib
 #DEPENDPATH += $$PWD/../lib

@@ -35,7 +35,6 @@ public:
     void addListItem(FontData *);
 
 signals:
-    // void countChanged(const int &count, FontData *);
     void deleteItem(FontData *);
 
 private slots:

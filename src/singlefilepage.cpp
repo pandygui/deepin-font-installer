@@ -33,22 +33,16 @@ SingleFilePage::SingleFilePage(QWidget *parent)
       m_typeLabel(new QLabel),
       m_versionLabel(new QLabel),
       m_copyrightLabel(new QLabel),
-      m_descLabel(new QLabel),
+      m_descriptionLabel(new QLabel),
       m_statusLabel(new QLabel),
       m_installBtn(new QPushButton(tr("Install"))),
       m_removeBtn(new QPushButton(tr("Remove"))),
       m_reinstallBtn(new QPushButton(tr("Reinstall")))
 {
-    // set word wrap.
-    m_nameLabel->setWordWrap(true);
-    m_styleLabel->setWordWrap(true);
-    m_typeLabel->setWordWrap(true);
-    m_versionLabel->setWordWrap(true);
-    m_copyrightLabel->setWordWrap(true);
-    m_descLabel->setWordWrap(true);
+    m_descriptionLabel->setWordWrap(true);
 
     // top icon, set pixmap to icon label.
-    QPixmap iconPixmap = DSvgRenderer::render(":/images/icon.svg", QSize(65, 65) * devicePixelRatioF());
+    QPixmap iconPixmap = DSvgRenderer::render(":/images/icon.svg",QSize(65, 65) * devicePixelRatioF());
     m_iconLabel->setFixedSize(65, 65);
     m_iconLabel->setPixmap(iconPixmap);
 
@@ -94,7 +88,7 @@ SingleFilePage::SingleFilePage(QWidget *parent)
     descLabel->setStyleSheet("QLabel { color: #444444; }");
     descLayout->addSpacing(20);
     descLayout->addWidget(descLabel, 0, Qt::AlignTop);
-    descLayout->addWidget(m_descLabel, 0, Qt::AlignTop);
+    descLayout->addWidget(m_descriptionLabel, 0, Qt::AlignTop);
     descLayout->addStretch();
     descLayout->addSpacing(20);
 
@@ -141,26 +135,25 @@ SingleFilePage::~SingleFilePage()
 
 void SingleFilePage::updateInfo(FontData *data)
 {
+    const QFontMetrics fm = m_versionLabel->fontMetrics();
+
     m_nameLabel->setText(data->familyName);
     m_styleLabel->setText(data->styleName);
-    m_typeLabel->setText("Unknow");
-    m_versionLabel->setText(data->version);
-    m_copyrightLabel->setText(m_copyrightLabel->fontMetrics()
-                              .elidedText(data->copyright, Qt::ElideRight, this->width() / 1.65));
-    m_descLabel->setText(m_descLabel->fontMetrics()
-                         .elidedText(data->description, Qt::ElideRight, this->width() * 1.2));
+    m_typeLabel->setText(data->type);
+    m_versionLabel->setText(fm.elidedText(data->version, Qt::ElideRight,
+                                          this->width() / 2));
+    m_copyrightLabel->setText(fm.elidedText(data->copyright, Qt::ElideRight,
+                                            this->width() / 2 + fm.width(tr("Copyright: "))));
+    m_descriptionLabel->setText(fm.elidedText(data->description, Qt::ElideRight,
+                                              this->width() * 1.2));
 
-    m_installBtn->hide();
-    m_removeBtn->show();
-    m_reinstallBtn->show();
-
-    // if (Utils::isFontInstalled(name)) {
-    //     m_installBtn->hide();
-    //     m_uninstallBtn->show();
-    //     m_reinstallBtn->show();
-    // } else {
-    //     m_installBtn->show();
-    //     m_uninstallBtn->hide();
-    //     m_reinstallBtn->hide();
-    // }
+    if (Utils::isFontInstalled(data->familyName)) {
+        m_installBtn->hide();
+        m_removeBtn->show();
+        m_reinstallBtn->show();
+    } else {
+        m_installBtn->show();
+        m_removeBtn->hide();
+        m_reinstallBtn->hide();
+    }
 }

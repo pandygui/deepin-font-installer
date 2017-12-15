@@ -29,7 +29,7 @@ ListItem::ListItem(QWidget *parent)
       m_infoLayout(new QVBoxLayout),
       m_nameLabel(new QLabel),
       m_styleLabel(new QLabel),
-      m_infoLabel(new QLabel("xxxxxxxxxx")),
+      m_infoLabel(new QLabel("不知道显示什么")),
       m_statusLabel(new QLabel),
       m_closeBtn(new DImageButton (":/images/close_normal.svg",
                                    ":/images/close_hover.svg",
@@ -69,8 +69,6 @@ QString ListItem::getFilePath() const
 
 void ListItem::setFontData(FontData *p)
 {
-    const QStringList list = Utils::getFontName(p->filePath);
-
     if (Utils::isFontInstalled(p->familyName)) {
         m_statusLabel->setText(tr("Installed"));
     }

@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("Deepin Font Installer"));
     setCentralWidget(m_mainWidget);
     setAcceptDrops(true);
-
+  
     // connect the signals to the slot function.
     connect(m_homePage, &HomePage::fileSelected, this, &MainWindow::onSelected);
     connect(m_multiFilePage, &MultiFilePage::countChanged, this, &MainWindow::refreshPage);
@@ -108,6 +108,7 @@ void MainWindow::refreshPage()
     if (count == 1) {
         // switch to single file page.
         m_mainLayout->setCurrentIndex(1);
+        // update info.
         m_singleFilePage->updateInfo(m_multiFilePage->dataList.first());
     } else {
         // switch to multi file page.
@@ -118,6 +119,7 @@ void MainWindow::refreshPage()
 void MainWindow::onSelected(const QStringList &files)
 {
     for (const auto &file : files) {
+        // add file path to multiFilePage class.
         m_multiFilePage->addItem(file);
     }
     

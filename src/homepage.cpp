@@ -20,6 +20,7 @@
 #include "homepage.h"
 #include "dsvgrenderer.h"
 #include "utils.h"
+#include <QSvgWidget>
 
 HomePage::HomePage(QWidget *parent)
     : QWidget(parent),

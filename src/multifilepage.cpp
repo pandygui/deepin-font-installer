@@ -52,13 +52,13 @@ void MultiFilePage::addItem(const QString &path)
     // add to dataList and listView if it does not exist.
     if (!isExist) {
         FontData *data = new FontData;
+
         data->filePath = path;
         Utils::getFontInfo(data);
         dataList << data;
 
         m_listView->addListItem(data);
     }
-
 }
 
 void MultiFilePage::handleDelete(FontData *p)
