@@ -18,6 +18,7 @@
  */
 
 #include "dfontinfo.h"
+#include <QFileInfo>
 #include <QProcess>
 
 DFontInfo::DFontInfo(QObject *parent)
@@ -34,6 +35,17 @@ DFontInfo::~DFontInfo()
     FT_Done_FreeType(m_library);
 }
 
+QString DFontInfo::getFontType(const QString &suffix)
+{
+    if (suffix == "ttf" || suffix == "ttc") {
+        return "TrueType";
+    } else if (suffix == "otf") {
+        return "OpenType";
+    } else {
+        return "Unknow";
+    }
+}
+
 void DFontInfo::getFontInfo(DFontData *data)
 {
     FT_New_Face(m_library, data->filePath.toLatin1().data(), 0, &m_face);
@@ -41,7 +53,9 @@ void DFontInfo::getFontInfo(DFontData *data)
     // get the basic data.
     data->familyName = QString::fromLatin1(m_face->family_name);
     data->styleName = QString::fromLatin1(m_face->style_name);
-    data->type = "Unknow";
+
+    const QFileInfo fileInfo(data->filePath);
+    data->type = getFontType(fileInfo.suffix());
 
     for (int i = 0; i < FT_Get_Sfnt_Name_Count(m_face); ++i) {
         FT_SfntName sname;
@@ -65,16 +79,16 @@ void DFontInfo::getFontInfo(DFontData *data)
             break;
         case TT_NAME_ID_VERSION_STRING:
             data->version = g_convert((char *)sname.string,
-                                      sname.string_len,
-                                      "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-            break;
-        case TT_NAME_ID_DESCRIPTION:
-            data->description = g_convert((char *)sname.string,
                                           sname.string_len,
                                           "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-            break;
+                break;
+            case TT_NAME_ID_DESCRIPTION:
+                data->description = g_convert((char *)sname.string,
+                                              sname.string_len,
+                                              "UTF-8", "UTF-16BE", NULL, NULL, NULL);
+                break;
+            }
         }
-    }
 
     // destroy object.
     FT_Done_Face(m_face);

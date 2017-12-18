@@ -51,6 +51,7 @@ public:
     DFontInfo(QObject *parent = nullptr);
     ~DFontInfo();
 
+    QString getFontType(const QString &suffix);
     void getFontInfo(DFontData *data);
     static QStringList families();
     static bool isFontInstalled(DFontData *data);
