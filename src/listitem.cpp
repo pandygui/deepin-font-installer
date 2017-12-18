@@ -67,9 +67,9 @@ QString ListItem::getFilePath() const
     return m_filePath;
 }
 
-void ListItem::setFontData(FontData *p)
+void ListItem::setFontData(DFontData *p)
 {
-    if (Utils::isFontInstalled(p->familyName)) {
+    if (DFontInfo::isFontInstalled(p)) {
         m_statusLabel->setText(tr("Installed"));
     }
 
@@ -78,7 +78,7 @@ void ListItem::setFontData(FontData *p)
     m_styleLabel->setText(m_fontData->styleName);
 }
 
-FontData *ListItem::getFontData()
+DFontData *ListItem::getFontData()
 {
     return m_fontData;
 }

@@ -18,11 +18,11 @@
  */
 
 #include "multifilepage.h"
-#include "utils.h"
 #include <QDebug>
 
 MultiFilePage::MultiFilePage(QWidget *parent)
     : QWidget(parent),
+      m_fontInfo(new DFontInfo),
       m_layout(new QVBoxLayout(this)),
       m_listView(new ListView),
       m_installBtn(new QPushButton(tr("Install")))
@@ -51,17 +51,16 @@ void MultiFilePage::addItem(const QString &path)
 
     // add to dataList and listView if it does not exist.
     if (!isExist) {
-        FontData *data = new FontData;
+        DFontData *data = new DFontData;
 
         data->filePath = path;
-        Utils::getFontInfo(data);
         dataList << data;
-
+        m_fontInfo->getFontInfo(data);
         m_listView->addListItem(data);
     }
 }
 
-void MultiFilePage::handleDelete(FontData *p)
+void MultiFilePage::handleDelete(DFontData *p)
 {
     dataList.removeAt(dataList.indexOf(p));
 

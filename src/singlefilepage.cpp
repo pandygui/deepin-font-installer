@@ -19,7 +19,6 @@
 
 #include "singlefilepage.h"
 #include "dsvgrenderer.h"
-#include "utils.h"
 #include <QFileInfo>
 
 DWIDGET_USE_NAMESPACE
@@ -133,7 +132,7 @@ SingleFilePage::~SingleFilePage()
 {
 }
 
-void SingleFilePage::updateInfo(FontData *data)
+void SingleFilePage::updateInfo(DFontData *data)
 {
     const QFontMetrics fm = m_versionLabel->fontMetrics();
 
@@ -147,7 +146,7 @@ void SingleFilePage::updateInfo(FontData *data)
     m_descriptionLabel->setText(fm.elidedText(data->description, Qt::ElideRight,
                                               this->width() * 1.2));
 
-    if (Utils::isFontInstalled(data->familyName)) {
+    if (DFontInfo::isFontInstalled(data)) {
         m_installBtn->hide();
         m_removeBtn->show();
         m_reinstallBtn->show();

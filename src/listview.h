@@ -22,7 +22,7 @@
 
 #include <QListWidget>
 #include "listitem.h"
-#include "fontdata.h"
+#include "dfontinfo.h"
 
 class ListView : public QListWidget
 {
@@ -32,10 +32,10 @@ public:
     ListView(QWidget *parent = nullptr);
     ~ListView();
 
-    void addListItem(FontData *);
+    void addListItem(DFontData *);
 
 signals:
-    void deleteItem(FontData *);
+    void deleteItem(DFontData *);
 
 private slots:
     void handleClose(QListWidgetItem *list);

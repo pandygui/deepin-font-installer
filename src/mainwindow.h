@@ -22,7 +22,6 @@
 
 #include <DMainWindow>
 #include <QStackedLayout>
-#include "fontdata.h"
 #include "homepage.h"
 #include "singlefilepage.h"
 #include "multifilepage.h"

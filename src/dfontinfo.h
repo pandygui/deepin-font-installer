@@ -17,19 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FONTDATA_H
-#define FONTDATA_H
+#ifndef DFONTINFO_H
+#define DFONTINFO_H
 
 #include <QObject>
 
-class FontData : public QObject
+#include <fontconfig/fontconfig.h>
+#include <ft2build.h>
+#include <glib.h>
+
+#include FT_FREETYPE_H
+#include FT_TYPE1_TABLES_H
+#include FT_SFNT_NAMES_H
+#include FT_TRUETYPE_IDS_H
+
+class DFontData
 {
-    Q_OBJECT
-
 public:
-    FontData(QObject *parent = nullptr);
-    ~FontData();
-
     QString filePath;
     QString familyName;
     QString styleName;
@@ -37,6 +41,24 @@ public:
     QString version;
     QString copyright;
     QString description;
+};
+
+class DFontInfo : public QObject
+{
+    Q_OBJECT
+
+public:
+    DFontInfo(QObject *parent = nullptr);
+    ~DFontInfo();
+
+    void getFontInfo(DFontData *data);
+    static QStringList families();
+    static bool isFontInstalled(DFontData *data);
+    static void fontInstall(const QStringList &files);
+    
+private:
+    FT_Library m_library;
+    FT_Face m_face;
 };
 
 #endif

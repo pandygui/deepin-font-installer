@@ -25,7 +25,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include "listview.h"
-#include "fontdata.h"
+#include "dfontinfo.h"
 
 class MultiFilePage : public QWidget
 {
@@ -41,14 +41,15 @@ signals:
     void countChanged();
     
 private:
-    void handleDelete(FontData *);
+    void handleDelete(DFontData *);
     
     QVBoxLayout *m_layout;
     ListView *m_listView;
     QPushButton *m_installBtn;
 
 public:
-    QList<FontData *> dataList;
+    QList<DFontData *> dataList;
+    DFontInfo *m_fontInfo;
 };
 
 #endif

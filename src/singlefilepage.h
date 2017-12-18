@@ -24,7 +24,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include "fontdata.h"
+#include "dfontinfo.h"
 
 class SingleFilePage : public QWidget
 {
@@ -34,7 +34,7 @@ public:
     SingleFilePage(QWidget *parent = nullptr);
     ~SingleFilePage();
 
-    void updateInfo(FontData *data);
+    void updateInfo(DFontData *data);
 
 signals:
     void installBtnClicked();

@@ -21,7 +21,6 @@
 #define UTILS_H
 
 #include <QObject>
-#include "fontdata.h"
 
 namespace Utils
 {
@@ -30,9 +29,7 @@ namespace Utils
     bool isFontSuffix(const QString &suffix);
     QString suffixList();
     QString getFontType(const QString &suffix);
-    void getFontInfo(FontData *data);
     void fontInstall(const QStringList &files);
-    QStringList getAllFontName();
 }
 
 #endif // UTILS_H

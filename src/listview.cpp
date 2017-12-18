@@ -31,7 +31,7 @@ ListView::~ListView()
 {
 }
 
-void ListView::addListItem(FontData *data)
+void ListView::addListItem(DFontData *data)
 {
     ListItem *fileItem = new ListItem;
 

@@ -50,7 +50,8 @@ QString Utils::getQssContent(const QString &filePath)
 
 bool Utils::isFontInstalled(const QString &fontName)
 {
-    const QStringList families = getAllFontName();
+    // const QStringList families = getAllFontName();
+    const QStringList families;
 
     for (const QString &name : families) {
         if (name == fontName) {
@@ -72,7 +73,7 @@ bool Utils::isFontSuffix(const QString &suffix)
 
 QString Utils::suffixList()
 {
-    return QString("Font Files (*.ttf *.ttc *.otf)");
+    return QString("Font Files (*.ttf *.ttc *.otf *.txt)");
 }
 
 QString Utils::getFontType(const QString &suffix)
@@ -83,64 +84,6 @@ QString Utils::getFontType(const QString &suffix)
         return "OpenType";
     } else {
         return "Unknow";
-    }
-}
-
-void Utils::getFontInfo(FontData *data)
-{
-    FT_Library library = 0;
-    FT_Face face = 0;
-
-    // init freetype and face.
-    FT_Init_FreeType(&library);
-    FT_New_Face(library, data->filePath.toLatin1().data(), 0, &face);
-
-    // get the basic data.
-    data->familyName = QString::fromLatin1(face->family_name);
-    data->styleName = QString::fromLatin1(face->style_name);
-
-    // get font type.
-    const QFileInfo fileInfo(data->filePath);
-    data->type = getFontType(fileInfo.suffix());
-
-    const int count = FT_Get_Sfnt_Name_Count(face);
-    for (int i = 0; i < count; ++i) {
-        FT_SfntName sname;
-
-        if (FT_Get_Sfnt_Name(face, i, &sname) != 0)
-            continue;
-
-        // only handle the unicode names for US langid.
-        if (!(sname.platform_id == TT_PLATFORM_MICROSOFT &&
-              sname.encoding_id == TT_MS_ID_UNICODE_CS &&
-              sname.language_id == TT_MS_LANGID_ENGLISH_UNITED_STATES))
-            continue;
-
-        switch (sname.name_id) {
-        case TT_NAME_ID_COPYRIGHT:
-            data->copyright = g_convert((char *)sname.string,
-                                        sname.string_len,
-                                        "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-            break;
-        case TT_NAME_ID_VERSION_STRING:
-            data->version = g_convert((char *)sname.string,
-                                      sname.string_len,
-                                      "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-            break;
-        case TT_NAME_ID_DESCRIPTION:
-            data->description = g_convert((char *)sname.string,
-                                          sname.string_len,
-                                          "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-            break;
-        }
-    }
-
-    // destroy object.
-    if (face) {
-        FT_Done_Face(face);
-    }
-    if (library) {
-        FT_Done_FreeType(library);
     }
 }
 
@@ -159,39 +102,4 @@ void Utils::fontInstall(const QStringList &files)
     process->waitForFinished();
     process->kill();
     process->close();
-}
-
-QStringList Utils::getAllFontName()
-{
-    QStringList families;
-    FcPattern *pattern = FcNameParse((FcChar8 *) ":");
-    FcObjectSet *objectset = FcObjectSetBuild(FC_FILE, NULL);
-    FcFontSet *fontset = FcFontList(NULL, pattern, objectset);
-    FcInit();
-
-    FT_Library library = 0;
-    FT_Face face = 0;
-    FT_Init_FreeType(&library);
-
-    for (int i = 0; i < fontset->nfont; ++i) {
-        FcChar8 *family;
-        if (FcPatternGetString(fontset->fonts[i], FC_FILE, 0, &family) == FcResultMatch) {
-            FT_New_Face(library, (char *)family, 0, &face);
-            families << face->family_name;
-        }
-    }
-
-    // destroy object.
-    if (face)
-        FT_Done_Face(face);
-    if (library)
-        FT_Done_FreeType(library);
-    if (objectset)
-        FcObjectSetDestroy(objectset);
-    if (pattern)
-        FcPatternDestroy(pattern);
-    if (fontset)
-        FcFontSetDestroy(fontset);
-
-    return families;
 }
